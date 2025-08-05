@@ -1,0 +1,8 @@
+(yolov-env) george@Georges-MacBook-Pro object_detection % python3 test_yolov11_with_severity.py
+
+image 1/1 /Users/george/Documents/github/final_gemma/gemma3n-car-damage-competition/object_detection/test_images/t4.jpg: 704x1024 1 dent, 1 scratch, 56.5ms
+Speed: 2.7ms preprocess, 56.5ms inference, 0.6ms postprocess per image at shape (1, 3, 704, 1024)
+
+🔧 Ranked Detections by Severity:
+dent | Conf: 0.65 | Area: 44811 | Score: 58655 | BBox: (426.8338928222656, 150.44515991210938, 690.5633544921875, 320.3568420410156)
+scratch | Conf: 0.54 | Area: 35654 | Score: 38613 | BBox: (292.55584716796875, 277.1870422363281, 469.99493408203125, 478.12237548828125)

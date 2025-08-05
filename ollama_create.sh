@@ -1,0 +1,1 @@
+ollama create gigwegbe-gemma3n-merged -f ./gigwegbe-gemma3n-merged

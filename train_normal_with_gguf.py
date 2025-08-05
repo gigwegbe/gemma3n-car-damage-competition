@@ -116,7 +116,7 @@ trainer = SFTTrainer(
         # gradient_checkpointing_kwargs = {"use_reentrant": False},
         max_grad_norm = 0.3,              # max gradient norm based on QLoRA paper
         warmup_steps = 5,                 # Use when using max_steps
-        max_steps = 1,
+        max_steps = 2,
         # warmup_ratio = 0.03,
         # num_train_epochs = 2,           # Set this instead of max_steps for full training runs
         learning_rate = 2e-4,
@@ -142,7 +142,7 @@ trainer = SFTTrainer(
 trainer_stats = trainer.train()
 wandb.finish()
 
-FastVisionModel.for_inference(model) 
+FastVisionModel.for_inference(model)
 # model = model.to(dtype=torch.float16)
 tokenizer = processor.tokenizer
 # model.save_pretrained("gemma-3N-lora-checkpoint",  max_shard_size="3GB")
@@ -150,27 +150,22 @@ model.save_pretrained("gemma-3N-lora-checkpoint", maximum_memory_usage = 0.50)
 tokenizer.save_pretrained("gemma-3N-lora-checkpoint")
 print("---------Done Training--------")
 
-if True: # Change to True to save finetune!
-    model.save_pretrained_merged("gemma-3N-finetune", processor,)
-print("---------Done Saving Finetune Model--------")
-
-
-model.save_pretrained_gguf(
-    "gemma-3N-finetune", # This will be the output directory for the GGUF file
-    quantization_method = "f16"
-)
-
-# if True: model.save_pretrained_merged("unsloth_finetune", processor,)
-
-# # To export and save to your Hugging Face account
-# # if False: model.push_to_hub_merged("YOUR_USERNAME/unsloth_finetune", processor, token = "PUT_HERE")
+# if True: # Change to True to save finetune!
+#     model.save_pretrained_merged("gemma-3N-finetune", processor, save_method = "merged_16bit",)
+# print("---------Done Saving Finetune Model--------")
 
 
 # model.save_pretrained_gguf(
-#     "unsloth_finetune", # The output directory for the GGUF file
-#     quantization_method = "f16" # Correct keyword argument name
+#     "gguf", # This will be the output directory for the GGUF file
+#     processor,
+#     quantization_type = "f16"
 # )
 
+model.save_pretrained_gguf(
+    "gguf", # The output directory for the GGUF file
+    processor,
+    quantization_method = "f16" # Correct keyword argument name
+)
 # import torch, gc
 # gc.collect()
 # torch.cuda.empty_cache()

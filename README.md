@@ -58,7 +58,7 @@ Start the WebSocket Server and Frontend
   - Images - Done 
 - Update Huggingface readme 
 - Add Readme of the following:
-  - training - 
+  - training - Done 
   - inference 
   - deployment
   - notebooks - Done 

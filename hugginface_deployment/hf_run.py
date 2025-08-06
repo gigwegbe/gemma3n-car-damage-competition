@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from unsloth import FastVisionModel
 from transformers import AutoProcessor, AutoModelForImageTextToText, AutoConfig
 import torch
 from PIL import Image
@@ -6,6 +7,10 @@ import requests
 from io import BytesIO
 import os 
 from werkzeug.utils import secure_filename
+ # FastLanguageModel for LLMs
+from transformers import AutoTokenizer, AutoModelForVision2Seq, TextStreamer, AutoProcessor
+import torch
+
 
 # Flask setup
 app = Flask(__name__)
@@ -22,12 +27,24 @@ torch.set_num_threads(4)
 config = AutoConfig.from_pretrained("gigwegbe/gemma3n-merged")
 config.num_attention_heads = 8 
 
-# Load model and processor once
-processor = AutoProcessor.from_pretrained("gigwegbe/gemma3n-merged")
-model = AutoModelForImageTextToText.from_pretrained("gigwegbe/gemma3n-merged", config=config)
-device = torch.device("mps")  # Force CPU for MacBook
-model.eval()
+model, processor = FastVisionModel.from_pretrained(
+    "unsloth/gemma-3n-E2B-it",
+    load_in_4bit = True, # Use 4bit to reduce memory use. False for 16bit LoRA.
+    use_gradient_checkpointing = "unsloth", # True or "unsloth" for long context
+)
+model.load_adapter("gigwegbe/gemma-3n-E2B-it-finetuned-adapters")
 
+# Step 3: Switch to inference mode
+FastVisionModel.for_inference(model)
+
+CLASS_WEIGHTS = {
+    "dent": 2.0,
+    "scratch": 2.0,
+    "crack": 3.0,
+    "glass shatter": 5.0,
+    "lamp broken": 3.5,
+    "tire flat": 1.0
+}
 def allowed_file(fname):
     return '.' in fname and fname.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -52,20 +69,61 @@ def analyze():
             {"type": "text", "text": question}
         ]
     }]
+    instruction = f"""You are an expert automobile inspector.
+        Review the image and verify whether the car damages shown are consistent with the following object detection results (ranked by severity):
 
-    inputs = processor.apply_chat_template(
-        messages,
-        add_generation_prompt=True,
-        tokenize=True,
-        return_dict=True,
-        return_tensors="pt",
-    ).to(model.device)
+        {question} Recall: {CLASS_WEIGHTS}
 
-    with torch.no_grad():
-        outputs = model.generate(**inputs, max_new_tokens=40)
+        For the detected damages, in a combined fashion return your analysis in the following structured format:
 
-    answer = processor.decode(outputs[0][inputs["input_ids"].shape[-1]:], skip_special_tokens=True)
-    return jsonify({'answer': answer})
+
+        {{
+            "general_description": <Long detailed assessment of all the  damages,  location and severity>,
+            "damage_type": <types of damages observed, e.g., 'glass shatter'>,
+            "qualitative_description_of_size_of_damage": <for each of the items discovered e.g., 'large', 'medium', 'minor'>,
+            "technical_description_location_of_damage": <specific parts of the car affected, e.g., 'front windshield, lower right'>,
+            "recommendation_for_fix": < Recommendation for fix for each part e.g., 'Replace the windshield', 'Polish the surface'>,
+            "estimated_time_of_repair": <e.g., '2–3 hours of labor', '30 minutes for polishing'>
+        }}
+
+        Only include entries that are visible in the image. Be as precise and professional as possible.
+        """
+        
+    messages = [
+    {
+        "role": "user",
+        "content": [
+            {"type": "image", "image": image},
+            {"type": "text", "text": instruction}
+        ],
+    }
+    ]
+
+    # This returns a string formatted for chat prompting
+    input_text = processor.apply_chat_template(messages, add_generation_prompt=True)
+
+    # === Tokenize multimodal input ===
+    inputs = processor(
+        text=input_text,
+        images=image,
+        return_tensors="pt"
+    ).to("cuda") 
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=256,
+        use_cache=True,
+        temperature=1.0,
+        top_p=0.95,
+        top_k=64,
+    )
+
+    # === Decode only the generated tokens (excluding input) ===
+    input_length = inputs.input_ids.shape[1]
+    generated_tokens = outputs[0][input_length:]
+    generated_text = processor.decode(generated_tokens, skip_special_tokens=True)
+    print(generated_text)
+
+    return jsonify({'answer': generated_text})
 
 
 
@@ -74,7 +132,7 @@ def home():
     return "Gemma3n Visual QA API running on MacBook."
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=6000, use_reloader=False)
+    app.run(host="0.0.0.0", port=6000, use_reloader=True)
 
 
 

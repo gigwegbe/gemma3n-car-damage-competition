@@ -56,6 +56,7 @@ Model:
   - ollama deployment 
   - local huggingface deployment
       - review the `max_new_tokens` currently 40 change to smt. 
+      - review the attention head ? 8 
       - Macbook M4 
       - RTX 3090
 

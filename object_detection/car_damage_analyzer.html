@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +26,7 @@
             background: white;
             border: 1px solid #dee2e6;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .header {
@@ -96,7 +97,8 @@
             align-items: start;
         }
 
-        .input-section, .output-section {
+        .input-section,
+        .output-section {
             background: #f8f9fa;
             border: 2px dashed #dee2e6;
             border-radius: 8px;
@@ -145,6 +147,11 @@
         .output-section {
             border-style: solid;
             border-color: #dee2e6;
+            transition: opacity 0.3s ease;
+        }
+
+        .output-section.clearing {
+            opacity: 0.5;
         }
 
         .processing-indicator {
@@ -168,8 +175,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .processing-text {
@@ -298,10 +310,10 @@
         }
 
         .repair-item {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             padding: 8px;
             border-radius: 3px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .repair-item strong {
@@ -384,11 +396,11 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
+
             .header h1 {
                 font-size: 1.5rem;
             }
-            
+
             .stages-container {
                 padding: 20px;
             }
@@ -399,17 +411,18 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>Car Damage Analyzer</h1>
             <p>Vehicle damage assessment Gemma3n analysis</p>
         </div>
-        
+
         <div class="connection-status" id="connectionStatus">
             Connecting to WebSocket server...
         </div>
-        
+
         <div class="stages-container">
             <div class="stage" id="stage1">
                 <h2 class="stage-title">Upload & Analyze</h2>
@@ -422,7 +435,7 @@
                         </div>
                         <input type="file" id="fileInput" accept="image/*">
                     </div>
-                    
+
                     <div class="output-section">
                         <div class="processing-indicator" id="yoloProcessing">
                             <div class="spinner"></div>
@@ -431,26 +444,27 @@
                                 <div class="progress-fill" id="yoloProgress"></div>
                             </div>
                         </div>
-                        
+
                         <div class="output-content" id="yoloOutput">
                             <div class="final-image-container" id="finalImageContainer">
-                                <img src="" alt="Car image with bounding boxes" class="uploaded-image" id="finalImage" style="display: none;">
+                                <img src="" alt="Car image with bounding boxes" class="uploaded-image" id="finalImage"
+                                    style="display: none;">
                                 <div class="placeholder-text">
                                     Final image with bounding boxes will appear here
                                 </div>
                             </div>
-                            
+
                             <div class="detection-summary" id="detectionSummary" style="display: none;">
                                 <div class="detection-count" id="detectionCount">0 detections found</div>
                             </div>
-                            
+
                             <div class="yolo-detections" id="yoloDetections" style="display: none;">
                                 <!-- YOLO detections will be populated here -->
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Analysis container -->
                 <div class="analysis-container" id="analysisContainer" style="display: none;">
                     <div class="processing-indicator" id="gemmaProcessing">
@@ -460,30 +474,31 @@
                             <div class="progress-fill" id="gemmaProgress"></div>
                         </div>
                     </div>
-                    
+
                     <div class="output-content" id="gemmaOutput">
                         <div class="analysis-header">
                             <h3>Gemma3n AI Analysis Report</h3>
                         </div>
-                        
+
                         <div class="analysis-section" id="generalDescription">
                             <h4>General Assessment</h4>
                             <p id="generalDescriptionText">Analysis will appear here...</p>
                         </div>
-                        
+
                         <div class="analysis-section" id="damageTypes">
                             <h4>Damage Types Identified</h4>
                             <div class="damage-types" id="damageTypesList">
                                 <!-- Damage type tags will be populated here -->
                             </div>
                         </div>
-                        
+
                         <div class="analysis-section" id="damageLocation">
                             <h4>Location & Size Assessment</h4>
                             <p id="damageLocationText">Location details will appear here...</p>
-                            <p id="damageSizeText" style="margin-top: 10px; font-weight: bold;">Size assessment will appear here...</p>
+                            <p id="damageSizeText" style="margin-top: 10px; font-weight: bold;">Size assessment will
+                                appear here...</p>
                         </div>
-                        
+
                         <div class="repair-info" id="repairInfo">
                             <h4>Repair Recommendations</h4>
                             <div class="repair-grid">
@@ -519,18 +534,18 @@
 
             connectWebSocket() {
                 const status = document.getElementById('connectionStatus');
-                
+
                 try {
                     // Automatically detect the WebSocket URL based on current host
                     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
                     const wsHost = window.location.hostname;
                     const wsUrl = `${wsProtocol}//${wsHost}:8765`;
-                    
+
                     console.log('Connecting to WebSocket:', wsUrl);
                     this.ws = new WebSocket(wsUrl);
-                    
+
                     this.ws.binaryType = 'arraybuffer';
-                    
+
                     this.ws.onopen = () => {
                         status.textContent = 'Connected to AI Analysis Server';
                         status.className = 'connection-status connected';
@@ -548,15 +563,15 @@
 
                     this.ws.onclose = (event) => {
                         console.log('WebSocket closed:', event.code, event.reason);
-                        
+
                         if (event.code === 1006) {
                             status.textContent = 'Connection lost - Server may be overloaded. Reconnecting...';
                         } else {
                             status.textContent = 'Disconnected from server - Attempting to reconnect...';
                         }
-                        
+
                         status.className = 'connection-status error';
-                        
+
                         // Try to reconnect after 3 seconds
                         setTimeout(() => this.connectWebSocket(), 3000);
                     };
@@ -575,16 +590,8 @@
 
             setupEventListeners() {
                 const uploadArea = document.getElementById('uploadArea');
-                const fileInput = document.getElementById('fileInput');
 
-                uploadArea.addEventListener('click', () => {
-                    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                        fileInput.click();
-                    } else {
-                        alert('Please wait for connection to the server...');
-                    }
-                });
-
+                // Setup drag and drop listeners (these don't need to be reset)
                 uploadArea.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     uploadArea.classList.add('dragover');
@@ -602,11 +609,8 @@
                     }
                 });
 
-                fileInput.addEventListener('change', async (e) => {
-                    if (e.target.files[0]) {
-                        await this.handleFile(e.target.files[0]);
-                    }
-                });
+                // Setup initial file input listeners
+                this.setupFileInputListeners();
             }
 
             async handleFile(file) {
@@ -627,11 +631,13 @@
                     if (!proceed) return;
                 }
 
+                // Cancel any ongoing operations and clear all previous results
+                this.cancelOngoingOperations();
                 this.clearResults();
 
-                // Show compression status
+                // Reset connection status to processing
                 const status = document.getElementById('connectionStatus');
-                status.textContent = 'Processing image...';
+                status.textContent = 'Processing new image...';
                 status.className = 'connection-status processing';
 
                 try {
@@ -648,57 +654,81 @@
                 }
             }
 
+            cancelOngoingOperations() {
+                // Clear any upload timeout
+                if (this.uploadTimeout) {
+                    clearTimeout(this.uploadTimeout);
+                    this.uploadTimeout = null;
+                }
+
+                // Clear any progress animations
+                const progressElements = ['yoloProgress', 'gemmaProgress'];
+                progressElements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.style.width = '0%';
+                    }
+                });
+
+                // Reset request ID to ignore any pending responses
+                this.requestId = null;
+            }
+
             async compressImage(file) {
                 return new Promise((resolve, reject) => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     const img = new Image();
-                    
+
                     img.onload = () => {
                         try {
                             // Calculate new dimensions (max 1920x1080 for large images)
                             const maxWidth = 1920;
                             const maxHeight = 1080;
                             let { width, height } = img;
-                            
+
                             // Only resize if image is larger than max dimensions
                             if (width > maxWidth || height > maxHeight) {
                                 const ratio = Math.min(maxWidth / width, maxHeight / height);
                                 width *= ratio;
                                 height *= ratio;
                             }
-                            
+
                             // Set canvas dimensions
                             canvas.width = width;
                             canvas.height = height;
-                            
+
                             // Draw and compress the image
                             ctx.drawImage(img, 0, 0, width, height);
-                            
+
                             // Convert to base64 with quality adjustment
                             let quality = 0.8; // Start with 80% quality
                             let base64Data = canvas.toDataURL('image/jpeg', quality);
-                            
+
                             // If still too large (> 2MB base64), reduce quality
                             while (base64Data.length > 2 * 1024 * 1024 && quality > 0.3) {
                                 quality -= 0.1;
                                 base64Data = canvas.toDataURL('image/jpeg', quality);
                             }
-                            
+
                             console.log(`Image processed: ${img.naturalWidth}x${img.naturalHeight} → ${width}x${height}, Quality: ${(quality * 100).toFixed(0)}%, Size: ${(base64Data.length / 1024 / 1024).toFixed(1)}MB`);
-                            
+
                             resolve(base64Data);
                         } catch (error) {
                             reject(error);
                         }
                     };
-                    
+
                     img.onerror = () => reject(new Error('Failed to load image'));
                     img.src = URL.createObjectURL(file);
                 });
             }
 
             clearResults() {
+                // Add clearing visual effect
+                const outputSections = document.querySelectorAll('.output-section');
+                outputSections.forEach(section => section.classList.add('clearing'));
+
                 // Hide all result sections
                 document.getElementById('yoloOutput').classList.remove('active');
                 document.getElementById('analysisContainer').style.display = 'none';
@@ -706,31 +736,103 @@
                 document.getElementById('finalImageContainer').querySelector('.placeholder-text').style.display = 'block';
                 document.getElementById('detectionSummary').style.display = 'none';
                 document.getElementById('yoloDetections').style.display = 'none';
-                
+
                 // Reset progress bars
                 document.getElementById('yoloProgress').style.width = '0%';
                 document.getElementById('gemmaProgress').style.width = '0%';
+
+                // Clear all analysis content
+                this.clearAnalysisContent();
+
+                // Reset processing indicators
+                document.getElementById('yoloProcessing').classList.remove('active');
+                document.getElementById('gemmaProcessing').classList.remove('active');
+                document.getElementById('gemmaOutput').classList.remove('active');
+
+                // Reset upload area to initial state
+                this.resetUploadArea();
+
+                // Remove clearing effect after a short delay
+                setTimeout(() => {
+                    outputSections.forEach(section => section.classList.remove('clearing'));
+                }, 300);
+            }
+
+            clearAnalysisContent() {
+                // Clear all analysis text content
+                document.getElementById('generalDescriptionText').textContent = 'Analysis will appear here...';
+                document.getElementById('damageLocationText').textContent = 'Location details will appear here...';
+                document.getElementById('damageSizeText').textContent = 'Size assessment will appear here...';
+                document.getElementById('repairRecommendation').textContent = 'Recommendation will appear here...';
+                document.getElementById('repairTime').textContent = 'Time estimate will appear here...';
+
+                // Clear damage types tags
+                document.getElementById('damageTypesList').innerHTML = '';
+
+                // Clear YOLO detections
+                document.getElementById('yoloDetections').innerHTML = '';
+
+                // Clear final image
+                document.getElementById('finalImage').src = '';
+
+                // Reset detection count
+                document.getElementById('detectionCount').textContent = '0 detections found';
+            }
+
+            resetUploadArea() {
+                const uploadArea = document.getElementById('uploadArea');
+                uploadArea.innerHTML = `
+                    <div class="upload-icon">IMAGE</div>
+                    <div class="upload-text">
+                        <strong>Click to upload or drag & drop</strong><br>
+                        your car damage image here
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*">
+                `;
+
+                // Re-attach event listeners to the new file input
+                this.setupFileInputListeners();
+            }
+
+            setupFileInputListeners() {
+                const uploadArea = document.getElementById('uploadArea');
+                const fileInput = document.getElementById('fileInput');
+
+                // Remove existing listeners by replacing the upload area click handler
+                uploadArea.onclick = () => {
+                    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                        fileInput.click();
+                    } else {
+                        alert('Please wait for connection to the server...');
+                    }
+                };
+
+                fileInput.onchange = async (e) => {
+                    if (e.target.files[0]) {
+                        await this.handleFile(e.target.files[0]);
+                    }
+                };
             }
 
             displayUploadedImage(imageSrc) {
                 const uploadArea = document.getElementById('uploadArea');
                 uploadArea.innerHTML = `
                     <img src="${imageSrc}" alt="Uploaded car image" class="uploaded-image">
-                    <p style="margin-top: 15px; color: #666; font-weight: bold;">Image uploaded successfully!</p>
+                    <p style="margin-top: 15px; color: #666; font-weight: bold;">New image uploaded - Starting analysis...</p>
                 `;
             }
 
             startAnalysis() {
                 this.requestId = 'req_' + Date.now();
-                
+
                 // Show YOLO processing
                 document.getElementById('yoloProcessing').classList.add('active');
-                
+
                 // Update status
                 const status = document.getElementById('connectionStatus');
                 status.textContent = 'Sending image to AI models...';
                 status.className = 'connection-status processing';
-                
+
                 // Start progress animation
                 this.animateProgress('yoloProgress', 3000);
 
@@ -749,14 +851,14 @@
                         image: this.currentImage,
                         request_id: this.requestId
                     }));
-                    
-                    console.log(`Sent image for analysis. Size: ${(JSON.stringify({image: this.currentImage}).length / 1024 / 1024).toFixed(1)}MB`);
-                    
+
+                    console.log(`Sent image for analysis. Size: ${(JSON.stringify({ image: this.currentImage }).length / 1024 / 1024).toFixed(1)}MB`);
+
                 } catch (error) {
                     console.error('Error sending image:', error);
                     status.textContent = 'Failed to send image - Try a smaller image';
                     status.className = 'connection-status error';
-                    
+
                     if (this.uploadTimeout) {
                         clearTimeout(this.uploadTimeout);
                     }
@@ -767,12 +869,12 @@
                 const progressBar = document.getElementById(progressId);
                 let progress = 0;
                 const increment = 100 / (duration / 100);
-                
+
                 const interval = setInterval(() => {
                     progress += increment + Math.random() * 10;
                     if (progress > 95) progress = 95; // Don't reach 100% until real completion
                     progressBar.style.width = progress + '%';
-                    
+
                     if (progress >= 95) {
                         clearInterval(interval);
                     }
@@ -781,13 +883,19 @@
 
             handleMessage(message) {
                 const status = document.getElementById('connectionStatus');
-                
+
                 // Clear upload timeout when we get any response
                 if (this.uploadTimeout) {
                     clearTimeout(this.uploadTimeout);
                     this.uploadTimeout = null;
                 }
-                
+
+                // Check if this response matches the current request (ignore old responses)
+                if (message.request_id && message.request_id !== this.requestId) {
+                    console.log('Ignoring response from old request:', message.request_id);
+                    return;
+                }
+
                 switch (message.type) {
                     case 'connection':
                         status.textContent = message.message;
@@ -824,12 +932,12 @@
             displayYoloResults(data) {
                 // Complete YOLO progress
                 document.getElementById('yoloProgress').style.width = '100%';
-                
+
                 setTimeout(() => {
                     // Hide processing, show results
                     document.getElementById('yoloProcessing').classList.remove('active');
                     document.getElementById('yoloOutput').classList.add('active');
-                    
+
                     // Display processed image
                     if (data.output_image) {
                         const finalImage = document.getElementById('finalImage');
@@ -837,32 +945,32 @@
                         finalImage.style.display = 'block';
                         document.getElementById('finalImageContainer').querySelector('.placeholder-text').style.display = 'none';
                     }
-                    
+
                     // Display detection summary
                     const detectionSummary = document.getElementById('detectionSummary');
                     const detectionCount = document.getElementById('detectionCount');
                     detectionCount.textContent = `${data.detection_count} damage area${data.detection_count !== 1 ? 's' : ''} detected`;
                     detectionSummary.style.display = 'block';
-                    
+
                     // Display YOLO detections
                     // if (data.detections && data.detections.length > 0) {
                     //     this.displayYoloDetections(data.detections);
                     // }
-                    
+
                     // Start Gemma analysis
                     setTimeout(() => {
                         document.getElementById('analysisContainer').style.display = 'block';
                         document.getElementById('gemmaProcessing').classList.add('active');
                         this.animateProgress('gemmaProgress', 4000);
                     }, 1000);
-                    
+
                 }, 500);
             }
 
             displayYoloDetections(detections) {
                 const container = document.getElementById('yoloDetections');
                 let html = '';
-                
+
                 detections.forEach(det => {
                     html += `
                         <div class="detection-item">
@@ -874,7 +982,7 @@
                         </div>
                     `;
                 });
-                
+
                 container.innerHTML = html;
                 container.style.display = 'block';
             }
@@ -882,31 +990,31 @@
             displayCompleteResults(data) {
                 // Complete Gemma progress
                 document.getElementById('gemmaProgress').style.width = '100%';
-                
+
                 setTimeout(() => {
                     // Hide processing, show results
                     document.getElementById('gemmaProcessing').classList.remove('active');
                     document.getElementById('gemmaOutput').classList.add('active');
-                    
+
                     // Parse and display Gemma analysis
                     this.parseAndDisplayGemmaAnalysis(data.gemma_analysis);
-                    
+
                     // Update final status
                     const status = document.getElementById('connectionStatus');
                     status.textContent = 'Complete AI analysis finished!';
                     status.className = 'connection-status connected';
-                    
+
                 }, 800);
             }
 
             parseAndDisplayGemmaAnalysis(analysis) {
                 try {
                     let analysisData;
-                    
+
                     if (typeof analysis === 'string') {
                         // First, try to extract JSON from markdown code blocks
                         let jsonString = analysis;
-                        
+
                         // Remove markdown code block wrapper if present
                         const codeBlockMatch = analysis.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
                         if (codeBlockMatch) {
@@ -920,21 +1028,21 @@
                                 console.log('Found JSON in text');
                             }
                         }
-                        
+
                         // Clean up the JSON string
                         jsonString = jsonString.trim();
-                        
+
                         // Parse the cleaned JSON
                         analysisData = JSON.parse(jsonString);
                         console.log('Successfully parsed JSON:', analysisData);
-                        
+
                     } else {
                         analysisData = analysis;
                     }
 
                     // Display structured data
                     this.displayStructuredAnalysis(analysisData);
-                    
+
                 } catch (error) {
                     console.log('Could not parse as JSON, displaying as text:', error);
                     console.log('Original analysis:', analysis);
@@ -953,14 +1061,14 @@
                 if (data.damage_type) {
                     const container = document.getElementById('damageTypesList');
                     container.innerHTML = '';
-                    
+
                     let damageTypes = [];
                     if (Array.isArray(data.damage_type)) {
                         damageTypes = data.damage_type;
                     } else if (typeof data.damage_type === 'string') {
                         damageTypes = data.damage_type.split(',').map(type => type.trim());
                     }
-                    
+
                     damageTypes.forEach(type => {
                         const tag = document.createElement('div');
                         tag.className = 'damage-tag';
@@ -1001,7 +1109,7 @@
             displayGemmaError(message) {
                 document.getElementById('gemmaProgress').style.width = '100%';
                 document.getElementById('gemmaProcessing').classList.remove('active');
-                
+
                 const container = document.getElementById('analysisContainer');
                 container.innerHTML = `
                     <div class="error-message">
@@ -1016,7 +1124,7 @@
                 document.getElementById('yoloProgress').style.width = '100%';
                 document.getElementById('yoloProcessing').classList.remove('active');
                 document.getElementById('yoloOutput').classList.add('active');
-                
+
                 // Display processed image
                 if (data.output_image) {
                     const finalImage = document.getElementById('finalImage');
@@ -1024,7 +1132,7 @@
                     finalImage.style.display = 'block';
                     document.getElementById('finalImageContainer').querySelector('.placeholder-text').style.display = 'none';
                 }
-                
+
                 const detectionSummary = document.getElementById('detectionSummary');
                 detectionSummary.innerHTML = `
                     <div class="detection-count" style="color: #28a745;">
@@ -1032,7 +1140,7 @@
                     </div>
                 `;
                 detectionSummary.style.display = 'block';
-                
+
                 const status = document.getElementById('connectionStatus');
                 status.textContent = 'Analysis complete - No damage detected';
                 status.className = 'connection-status connected';
@@ -1048,7 +1156,7 @@
                         <p>Please try uploading your image again.</p>
                     </div>
                 `;
-                
+
                 const status = document.getElementById('connectionStatus');
                 status.textContent = 'Error: ' + message;
                 status.className = 'connection-status error';
@@ -1061,4 +1169,5 @@
         });
     </script>
 </body>
+
 </html>

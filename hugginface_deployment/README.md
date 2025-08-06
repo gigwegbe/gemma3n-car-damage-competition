@@ -1,9 +1,8 @@
 ## Run the VLM deployment script for any of these devices: 
-- Install the requirements of your device: 
+- Install the requirements of your devices: 
 ```
   pip install -r requirements_mac.txt
 ```
-  or 
 ```
   pip install -r requirements_rtx.txt
 ```

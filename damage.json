@@ -1,8 +1,0 @@
-{
-    "general_description": <Long detailed assessment of the damages, its location and severity>,
-    "damage_type": <type of damage, e.g., 'glass shatter'>,
-    "qualitative_description_of_size_of_damage": <e.g., 'large', 'medium', 'minor'>,
-    "technical_description_location_of_damage": <specific part of the car affected, e.g., 'front windshield, lower right'>,
-    "recommendation_for_fix": <e.g., 'Replace the windshield', 'Polish the surface'>,
-    "estimated_time_of_repair": <e.g., '2–3 hours of labor', '30 minutes for polishing'>
-}

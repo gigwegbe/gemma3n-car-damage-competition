@@ -59,6 +59,7 @@ Model:
       - review the attention head ? 8 
       - Macbook M4 
       - RTX 3090
+      - Add requirements for deployment
 
 - Review all links are working 
   

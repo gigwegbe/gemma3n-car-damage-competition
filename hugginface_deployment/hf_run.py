@@ -75,3 +75,11 @@ def home():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=6000, use_reloader=False)
+
+
+
+#================= Send this via Terminal =================
+# curl -X POST http://localhost:6000/analyze \
+#   -F "file=@/Users/george/Desktop/car2.png" \
+#   -F "question=What damages done to the car?"
+#================= Send this via Terminal =================

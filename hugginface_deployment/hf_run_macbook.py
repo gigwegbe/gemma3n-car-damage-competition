@@ -19,12 +19,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Set PyTorch to use only 1 thread (MacBooks are sensitive to CPU use)
 torch.set_num_threads(4)
 
-# config = AutoConfig.from_pretrained("gigwegbe/gemma3n-merged")
-# config.num_attention_heads = 8 
-
 # Load model and processor once
 processor = AutoProcessor.from_pretrained("gigwegbe/gemma3n-merged")
-# model = AutoModelForImageTextToText.from_pretrained("gigwegbe/gemma3n-merged", config=config)
 model = AutoModelForImageTextToText.from_pretrained("gigwegbe/gemma3n-merged")
 device = torch.device("mps")  # Force CPU for MacBook
 model.eval()

@@ -64,11 +64,11 @@ Start the WebSocket Server and Frontend
   - notebooks
   - ollama deployment 
   - local huggingface deployment
-      - review the `max_new_tokens` currently 40 change to smt. 
-      - review the attention head ? 8 
-      - Macbook M4 
-      - RTX 3090
-      - Add requirements for deployment
+      - review the `max_new_tokens` currently 40 change to smt - Done 
+      - review the attention head ? 8 - Done 
+      - Macbook M4 - Done 
+      - RTX 3090 - Done 
+      - Add requirements for deployment - Done 
 
 - Review all links are working 
   

@@ -1,5 +1,5 @@
 Training Codebase Overview
-This directory contains the complete training codebase for the model, including:
+This directory contains all scripts for training the model under various settings:
 
 Training on Unannotated (Normal) Data `train.py`:   
     Run the script: 

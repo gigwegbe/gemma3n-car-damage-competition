@@ -435,7 +435,7 @@ async def main():
     
     # Configure WebSocket server with larger message limits and timeout settings
     server_config = {
-        "host": "0.0.0.0",  # Bind to all interfaces for public access
+        # "host": "0.0.0.0",  # Bind to all interfaces for public access
         "port": 8765,
         "max_size": 50 * 1024 * 1024,  # 50MB max message size
         "max_queue": 100,  # Increased message queue

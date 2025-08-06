@@ -28,7 +28,7 @@ Model:
 - Deploy 
 
 
-### How to Run the Application
+## How to Run the Application
 Start the AutoVision Inspector VLM
 - Launch VLM Deployment - [Link](https://github.com/gigwegbe/gemma3n-car-damage-competition/tree/main/hugginface_deployment)
 

@@ -27,6 +27,9 @@
 - Add Report 
 - Upload Video 
 - Remove all token or make them invalid 
+- Add Notebook to Kaggle
+- Add paper 
+- Add Design - GoodNote 
   
 
 

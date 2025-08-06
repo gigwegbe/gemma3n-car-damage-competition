@@ -14,4 +14,3 @@ pip install --no-deps transformers==4.53.1 # Only for Gemma 3N
 pip install --no-deps --upgrade timm # Only for Gemma 3N
 pip install wandb 
 
-ollama create gigwegbe-gemma3n-merged -f ./gigwegbe-gemma3n-merged

@@ -48,6 +48,17 @@ Model:
   - Link - Done
   - Images - Done 
 - Update Huggingface readme 
+- Add Readme of the following:
+  - training 
+  - inference 
+  - deployment
+  - notebooks
+  - ollama deployment 
+  - local huggingface deployment
+      - review the `max_new_tokens` currently 40 change to smt. 
+      - Macbook M4 
+      - RTX 3090
+
 - Review all links are working 
   
 

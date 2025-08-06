@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified YOLO + Gemma3n Car Damage Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: #343a40;
+            color: white;
+            padding: 20px 40px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            color: #adb5bd;
+        }
+
+        .connection-status {
+            margin: 20px 40px;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .connection-status.connected {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .connection-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .connection-status.processing {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .stages-container {
+            padding: 40px;
+        }
+
+        .stage {
+            margin-bottom: 40px;
+        }
+
+        .stage-title {
+            font-size: 1.4rem;
+            color: #495057;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 500;
+        }
+
+        .stage-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .input-section, .output-section {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 30px;
+            min-height: 300px;
+            transition: all 0.2s ease;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .input-section:hover {
+            border-color: #6c757d;
+            background: #ffffff;
+        }
+
+        .input-section.dragover {
+            border-color: #28a745;
+            background: #f8fff8;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1rem;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .uploaded-image {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .output-section {
+            border-style: solid;
+            border-color: #dee2e6;
+        }
+
+        .processing-indicator {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .processing-indicator.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .processing-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .output-content {
+            display: none;
+        }
+
+        .output-content.active {
+            display: block;
+        }
+
+        .final-image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 40px;
+        }
+
+        .detection-summary {
+            background: #e8f5e8;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .detection-count {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #155724;
+        }
+
+        .analysis-container {
+            margin-top: 30px;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .analysis-header {
+            background: #495057;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .analysis-header h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .analysis-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .analysis-section h4 {
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .analysis-section p {
+            color: #6c757d;
+            line-height: 1.5;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .damage-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .damage-tag {
+            background: #007bff;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .repair-info {
+            background: #495057;
+            color: white;
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+
+        .repair-info h4 {
+            margin-bottom: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .repair-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .repair-item {
+            background: rgba(255,255,255,0.1);
+            padding: 8px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .repair-item strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        .repair-item span {
+            font-size: 0.85rem;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .yolo-detections {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .detection-item {
+            background: white;
+            border: 1px solid #e3f2fd;
+            border-radius: 3px;
+            padding: 8px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .detection-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .confidence {
+            background: #28a745;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .stage-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stages-container {
+                padding: 20px;
+            }
+
+            .repair-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Car Damage Analyzer</h1>
+            <p>Vehicle damage assessment Gemma3n analysis</p>
+        </div>
+        
+        <div class="connection-status" id="connectionStatus">
+            Connecting to WebSocket server...
+        </div>
+        
+        <div class="stages-container">
+            <div class="stage" id="stage1">
+                <h2 class="stage-title">Upload & Analyze</h2>
+                <div class="stage-content">
+                    <div class="input-section" id="uploadArea">
+                        <div class="upload-icon">IMAGE</div>
+                        <div class="upload-text">
+                            <strong>Click to upload or drag & drop</strong><br>
+                            your car damage image here
+                        </div>
+                        <input type="file" id="fileInput" accept="image/*">
+                    </div>
+                    
+                    <div class="output-section">
+                        <div class="processing-indicator" id="yoloProcessing">
+                            <div class="spinner"></div>
+                            <div class="processing-text">Processing with YOLO model...</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="yoloProgress"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="output-content" id="yoloOutput">
+                            <div class="final-image-container" id="finalImageContainer">
+                                <img src="" alt="Car image with bounding boxes" class="uploaded-image" id="finalImage" style="display: none;">
+                                <div class="placeholder-text">
+                                    Final image with bounding boxes will appear here
+                                </div>
+                            </div>
+                            
+                            <div class="detection-summary" id="detectionSummary" style="display: none;">
+                                <div class="detection-count" id="detectionCount">0 detections found</div>
+                            </div>
+                            
+                            <div class="yolo-detections" id="yoloDetections" style="display: none;">
+                                <!-- YOLO detections will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analysis container -->
+                <div class="analysis-container" id="analysisContainer" style="display: none;">
+                    <div class="processing-indicator" id="gemmaProcessing">
+                        <div class="spinner" style="width: 30px; height: 30px;"></div>
+                        <div class="processing-text">Generating detailed AI analysis...</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="gemmaProgress"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="output-content" id="gemmaOutput">
+                        <div class="analysis-header">
+                            <h3>Gemma3n AI Analysis Report</h3>
+                        </div>
+                        
+                        <div class="analysis-section" id="generalDescription">
+                            <h4>General Assessment</h4>
+                            <p id="generalDescriptionText">Analysis will appear here...</p>
+                        </div>
+                        
+                        <div class="analysis-section" id="damageTypes">
+                            <h4>Damage Types Identified</h4>
+                            <div class="damage-types" id="damageTypesList">
+                                <!-- Damage type tags will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-section" id="damageLocation">
+                            <h4>Location & Size Assessment</h4>
+                            <p id="damageLocationText">Location details will appear here...</p>
+                            <p id="damageSizeText" style="margin-top: 10px; font-weight: bold;">Size assessment will appear here...</p>
+                        </div>
+                        
+                        <div class="repair-info" id="repairInfo">
+                            <h4>Repair Recommendations</h4>
+                            <div class="repair-grid">
+                                <div class="repair-item">
+                                    <strong>Recommended Action:</strong>
+                                    <span id="repairRecommendation">Recommendation will appear here...</span>
+                                </div>
+                                <div class="repair-item">
+                                    <strong>Estimated Time:</strong>
+                                    <span id="repairTime">Time estimate will appear here...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class CarDamageAnalyzer {
+            constructor() {
+                this.ws = null;
+                this.currentImage = null;
+                this.requestId = null;
+                this.init();
+            }
+
+            init() {
+                this.connectWebSocket();
+                this.setupEventListeners();
+            }
+
+            connectWebSocket() {
+                const status = document.getElementById('connectionStatus');
+                
+                try {
+                    // Automatically detect the WebSocket URL based on current host
+                    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    const wsHost = window.location.hostname;
+                    const wsUrl = `${wsProtocol}//${wsHost}:8765`;
+                    
+                    console.log('Connecting to WebSocket:', wsUrl);
+                    this.ws = new WebSocket(wsUrl);
+                    
+                    this.ws.binaryType = 'arraybuffer';
+                    
+                    this.ws.onopen = () => {
+                        status.textContent = 'Connected to AI Analysis Server';
+                        status.className = 'connection-status connected';
+                    };
+
+                    this.ws.onmessage = (event) => {
+                        try {
+                            this.handleMessage(JSON.parse(event.data));
+                        } catch (error) {
+                            console.error('Error parsing message:', error);
+                            status.textContent = '❌ Error processing server response';
+                            status.className = 'connection-status error';
+                        }
+                    };
+
+                    this.ws.onclose = (event) => {
+                        console.log('WebSocket closed:', event.code, event.reason);
+                        
+                        if (event.code === 1006) {
+                            status.textContent = 'Connection lost - Server may be overloaded. Reconnecting...';
+                        } else {
+                            status.textContent = 'Disconnected from server - Attempting to reconnect...';
+                        }
+                        
+                        status.className = 'connection-status error';
+                        
+                        // Try to reconnect after 3 seconds
+                        setTimeout(() => this.connectWebSocket(), 3000);
+                    };
+
+                    this.ws.onerror = (error) => {
+                        console.error('WebSocket error:', error);
+                        status.textContent = 'Connection error - Make sure server is running on port 8765';
+                        status.className = 'connection-status error';
+                    };
+
+                } catch (error) {
+                    status.textContent = 'Failed to connect to WebSocket server';
+                    status.className = 'connection-status error';
+                }
+            }
+
+            setupEventListeners() {
+                const uploadArea = document.getElementById('uploadArea');
+                const fileInput = document.getElementById('fileInput');
+
+                uploadArea.addEventListener('click', () => {
+                    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                        fileInput.click();
+                    } else {
+                        alert('Please wait for connection to the server...');
+                    }
+                });
+
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+
+                uploadArea.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    if (e.dataTransfer.files[0]) {
+                        await this.handleFile(e.dataTransfer.files[0]);
+                    }
+                });
+
+                fileInput.addEventListener('change', async (e) => {
+                    if (e.target.files[0]) {
+                        await this.handleFile(e.target.files[0]);
+                    }
+                });
+            }
+
+            async handleFile(file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Please upload an image file');
+                    return;
+                }
+
+                if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+                    alert('Please wait for connection to the server...');
+                    return;
+                }
+
+                // Check file size (warn if > 10MB)
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                if (file.size > maxSize) {
+                    const proceed = confirm(`This image is quite large (${(file.size / 1024 / 1024).toFixed(1)}MB). It may take longer to process. Continue?`);
+                    if (!proceed) return;
+                }
+
+                this.clearResults();
+
+                // Show compression status
+                const status = document.getElementById('connectionStatus');
+                status.textContent = 'Processing image...';
+                status.className = 'connection-status processing';
+
+                try {
+                    // Compress and process the image
+                    const processedImage = await this.compressImage(file);
+                    this.currentImage = processedImage;
+                    this.displayUploadedImage(processedImage);
+                    this.startAnalysis();
+                } catch (error) {
+                    console.error('Image processing error:', error);
+                    alert('Error processing image. Please try a different image.');
+                    status.textContent = 'Image processing failed';
+                    status.className = 'connection-status error';
+                }
+            }
+
+            async compressImage(file) {
+                return new Promise((resolve, reject) => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    
+                    img.onload = () => {
+                        try {
+                            // Calculate new dimensions (max 1920x1080 for large images)
+                            const maxWidth = 1920;
+                            const maxHeight = 1080;
+                            let { width, height } = img;
+                            
+                            // Only resize if image is larger than max dimensions
+                            if (width > maxWidth || height > maxHeight) {
+                                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                                width *= ratio;
+                                height *= ratio;
+                            }
+                            
+                            // Set canvas dimensions
+                            canvas.width = width;
+                            canvas.height = height;
+                            
+                            // Draw and compress the image
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            // Convert to base64 with quality adjustment
+                            let quality = 0.8; // Start with 80% quality
+                            let base64Data = canvas.toDataURL('image/jpeg', quality);
+                            
+                            // If still too large (> 2MB base64), reduce quality
+                            while (base64Data.length > 2 * 1024 * 1024 && quality > 0.3) {
+                                quality -= 0.1;
+                                base64Data = canvas.toDataURL('image/jpeg', quality);
+                            }
+                            
+                            console.log(`Image processed: ${img.naturalWidth}x${img.naturalHeight} → ${width}x${height}, Quality: ${(quality * 100).toFixed(0)}%, Size: ${(base64Data.length / 1024 / 1024).toFixed(1)}MB`);
+                            
+                            resolve(base64Data);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                    
+                    img.onerror = () => reject(new Error('Failed to load image'));
+                    img.src = URL.createObjectURL(file);
+                });
+            }
+
+            clearResults() {
+                // Hide all result sections
+                document.getElementById('yoloOutput').classList.remove('active');
+                document.getElementById('analysisContainer').style.display = 'none';
+                document.getElementById('finalImage').style.display = 'none';
+                document.getElementById('finalImageContainer').querySelector('.placeholder-text').style.display = 'block';
+                document.getElementById('detectionSummary').style.display = 'none';
+                document.getElementById('yoloDetections').style.display = 'none';
+                
+                // Reset progress bars
+                document.getElementById('yoloProgress').style.width = '0%';
+                document.getElementById('gemmaProgress').style.width = '0%';
+            }
+
+            displayUploadedImage(imageSrc) {
+                const uploadArea = document.getElementById('uploadArea');
+                uploadArea.innerHTML = `
+                    <img src="${imageSrc}" alt="Uploaded car image" class="uploaded-image">
+                    <p style="margin-top: 15px; color: #666; font-weight: bold;">Image uploaded successfully!</p>
+                `;
+            }
+
+            startAnalysis() {
+                this.requestId = 'req_' + Date.now();
+                
+                // Show YOLO processing
+                document.getElementById('yoloProcessing').classList.add('active');
+                
+                // Update status
+                const status = document.getElementById('connectionStatus');
+                status.textContent = 'Sending image to AI models...';
+                status.className = 'connection-status processing';
+                
+                // Start progress animation
+                this.animateProgress('yoloProgress', 3000);
+
+                try {
+                    // Add timeout for large image uploads
+                    this.uploadTimeout = setTimeout(() => {
+                        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                            status.textContent = '⚠️ Upload taking longer than expected...';
+                            status.className = 'connection-status processing';
+                        }
+                    }, 10000); // 10 second warning
+
+                    // Send image for analysis
+                    this.ws.send(JSON.stringify({
+                        type: 'analyze_image',
+                        image: this.currentImage,
+                        request_id: this.requestId
+                    }));
+                    
+                    console.log(`Sent image for analysis. Size: ${(JSON.stringify({image: this.currentImage}).length / 1024 / 1024).toFixed(1)}MB`);
+                    
+                } catch (error) {
+                    console.error('Error sending image:', error);
+                    status.textContent = 'Failed to send image - Try a smaller image';
+                    status.className = 'connection-status error';
+                    
+                    if (this.uploadTimeout) {
+                        clearTimeout(this.uploadTimeout);
+                    }
+                }
+            }
+
+            animateProgress(progressId, duration) {
+                const progressBar = document.getElementById(progressId);
+                let progress = 0;
+                const increment = 100 / (duration / 100);
+                
+                const interval = setInterval(() => {
+                    progress += increment + Math.random() * 10;
+                    if (progress > 95) progress = 95; // Don't reach 100% until real completion
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 95) {
+                        clearInterval(interval);
+                    }
+                }, 100);
+            }
+
+            handleMessage(message) {
+                const status = document.getElementById('connectionStatus');
+                
+                // Clear upload timeout when we get any response
+                if (this.uploadTimeout) {
+                    clearTimeout(this.uploadTimeout);
+                    this.uploadTimeout = null;
+                }
+                
+                switch (message.type) {
+                    case 'connection':
+                        status.textContent = message.message;
+                        status.className = 'connection-status connected';
+                        break;
+
+                    case 'status':
+                        status.textContent = message.message;
+                        status.className = 'connection-status processing';
+                        break;
+
+                    case 'yolo_results':
+                        this.displayYoloResults(message.data);
+                        break;
+
+                    case 'complete_analysis':
+                        this.displayCompleteResults(message.data);
+                        break;
+
+                    case 'gemma_analysis_failed':
+                        this.displayGemmaError(message.message);
+                        break;
+
+                    case 'no_detections':
+                        this.displayNoDetections(message.data);
+                        break;
+
+                    case 'error':
+                        this.displayError(message.message);
+                        break;
+                }
+            }
+
+            displayYoloResults(data) {
+                // Complete YOLO progress
+                document.getElementById('yoloProgress').style.width = '100%';
+                
+                setTimeout(() => {
+                    // Hide processing, show results
+                    document.getElementById('yoloProcessing').classList.remove('active');
+                    document.getElementById('yoloOutput').classList.add('active');
+                    
+                    // Display processed image
+                    if (data.output_image) {
+                        const finalImage = document.getElementById('finalImage');
+                        finalImage.src = `data:image/jpeg;base64,${data.output_image}`;
+                        finalImage.style.display = 'block';
+                        document.getElementById('finalImageContainer').querySelector('.placeholder-text').style.display = 'none';
+                    }
+                    
+                    // Display detection summary
+                    const detectionSummary = document.getElementById('detectionSummary');
+                    const detectionCount = document.getElementById('detectionCount');
+                    detectionCount.textContent = `${data.detection_count} damage area${data.detection_count !== 1 ? 's' : ''} detected`;
+                    detectionSummary.style.display = 'block';
+                    
+                    // Display YOLO detections
+                    // if (data.detections && data.detections.length > 0) {
+                    //     this.displayYoloDetections(data.detections);
+                    // }
+                    
+                    // Start Gemma analysis
+                    setTimeout(() => {
+                        document.getElementById('analysisContainer').style.display = 'block';
+                        document.getElementById('gemmaProcessing').classList.add('active');
+                        this.animateProgress('gemmaProgress', 4000);
+                    }, 1000);
+                    
+                }, 500);
+            }
+
+            displayYoloDetections(detections) {
+                const container = document.getElementById('yoloDetections');
+                let html = '';
+                
+                detections.forEach(det => {
+                    html += `
+                        <div class="detection-item">
+                            <div>
+                                <strong>${det.class}</strong><br>
+                                <small>Area: ${det.area.toFixed(0)} px² | Score: ${det.severity_score.toFixed(0)}</small>
+                            </div>
+                            <div class="confidence">${(det.conf * 100).toFixed(1)}%</div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                container.style.display = 'block';
+            }
+
+            displayCompleteResults(data) {
+                // Complete Gemma progress
+                document.getElementById('gemmaProgress').style.width = '100%';
+                
+                setTimeout(() => {
+                    // Hide processing, show results
+                    document.getElementById('gemmaProcessing').classList.remove('active');
+                    document.getElementById('gemmaOutput').classList.add('active');
+                    
+                    // Parse and display Gemma analysis
+                    this.parseAndDisplayGemmaAnalysis(data.gemma_analysis);
+                    
+                    // Update final status
+                    const status = document.getElementById('connectionStatus');
+                    status.textContent = 'Complete AI analysis finished!';
+                    status.className = 'connection-status connected';
+                    
+                }, 800);
+            }
+
+            parseAndDisplayGemmaAnalysis(analysis) {
+                try {
+                    let analysisData;
+                    
+                    if (typeof analysis === 'string') {
+                        // First, try to extract JSON from markdown code blocks
+                        let jsonString = analysis;
+                        
+                        // Remove markdown code block wrapper if present
+                        const codeBlockMatch = analysis.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+                        if (codeBlockMatch) {
+                            jsonString = codeBlockMatch[1];
+                            console.log('Found JSON in markdown code block');
+                        } else {
+                            // Look for JSON anywhere in the string
+                            const jsonMatch = analysis.match(/\{[\s\S]*\}/);
+                            if (jsonMatch) {
+                                jsonString = jsonMatch[0];
+                                console.log('Found JSON in text');
+                            }
+                        }
+                        
+                        // Clean up the JSON string
+                        jsonString = jsonString.trim();
+                        
+                        // Parse the cleaned JSON
+                        analysisData = JSON.parse(jsonString);
+                        console.log('Successfully parsed JSON:', analysisData);
+                        
+                    } else {
+                        analysisData = analysis;
+                    }
+
+                    // Display structured data
+                    this.displayStructuredAnalysis(analysisData);
+                    
+                } catch (error) {
+                    console.log('Could not parse as JSON, displaying as text:', error);
+                    console.log('Original analysis:', analysis);
+                    // Fallback to text display
+                    this.displayTextAnalysis(analysis);
+                }
+            }
+
+            displayStructuredAnalysis(data) {
+                // General Description
+                if (data.general_description) {
+                    document.getElementById('generalDescriptionText').textContent = data.general_description;
+                }
+
+                // Damage Types - handle both string and array formats
+                if (data.damage_type) {
+                    const container = document.getElementById('damageTypesList');
+                    container.innerHTML = '';
+                    
+                    let damageTypes = [];
+                    if (Array.isArray(data.damage_type)) {
+                        damageTypes = data.damage_type;
+                    } else if (typeof data.damage_type === 'string') {
+                        damageTypes = data.damage_type.split(',').map(type => type.trim());
+                    }
+                    
+                    damageTypes.forEach(type => {
+                        const tag = document.createElement('div');
+                        tag.className = 'damage-tag';
+                        tag.textContent = type;
+                        container.appendChild(tag);
+                    });
+                }
+
+                // Location
+                if (data.technical_description_location_of_damage) {
+                    document.getElementById('damageLocationText').textContent = data.technical_description_location_of_damage;
+                }
+
+                // Size
+                if (data.qualitative_description_of_size_of_damage) {
+                    document.getElementById('damageSizeText').textContent = `Size: ${data.qualitative_description_of_size_of_damage}`;
+                }
+
+                // Repair recommendations
+                if (data.recommendation_for_fix) {
+                    document.getElementById('repairRecommendation').textContent = data.recommendation_for_fix;
+                }
+
+                if (data.estimated_time_of_repair) {
+                    document.getElementById('repairTime').textContent = data.estimated_time_of_repair;
+                }
+            }
+
+            displayTextAnalysis(analysis) {
+                // Simple text fallback
+                document.getElementById('generalDescriptionText').textContent = analysis;
+                document.getElementById('damageLocationText').textContent = 'See general description above';
+                document.getElementById('damageSizeText').textContent = 'Analysis included in description';
+                document.getElementById('repairRecommendation').textContent = 'See detailed analysis above';
+                document.getElementById('repairTime').textContent = 'Contact professional for estimate';
+            }
+
+            displayGemmaError(message) {
+                document.getElementById('gemmaProgress').style.width = '100%';
+                document.getElementById('gemmaProcessing').classList.remove('active');
+                
+                const container = document.getElementById('analysisContainer');
+                container.innerHTML = `
+                    <div class="error-message">
+                        <h4>AI Analysis Unavailable</h4>
+                        <p>${message}</p>
+                        <p><strong>YOLO detection completed successfully.</strong> The processed image and damage detection results are available above.</p>
+                    </div>
+                `;
+            }
+
+            displayNoDetections(data) {
+                document.getElementById('yoloProgress').style.width = '100%';
+                document.getElementById('yoloProcessing').classList.remove('active');
+                document.getElementById('yoloOutput').classList.add('active');
+                
+                // Display processed image
+                if (data.output_image) {
+                    const finalImage = document.getElementById('finalImage');
+                    finalImage.src = `data:image/jpeg;base64,${data.output_image}`;
+                    finalImage.style.display = 'block';
+                    document.getElementById('finalImageContainer').querySelector('.placeholder-text').style.display = 'none';
+                }
+                
+                const detectionSummary = document.getElementById('detectionSummary');
+                detectionSummary.innerHTML = `
+                    <div class="detection-count" style="color: #28a745;">
+                        No damage detected - Vehicle appears to be in good condition!
+                    </div>
+                `;
+                detectionSummary.style.display = 'block';
+                
+                const status = document.getElementById('connectionStatus');
+                status.textContent = 'Analysis complete - No damage detected';
+                status.className = 'connection-status connected';
+            }
+
+            displayError(message) {
+                const container = document.getElementById('analysisContainer');
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <div class="error-message">
+                        <h4>Analysis Error</h4>
+                        <p>${message}</p>
+                        <p>Please try uploading your image again.</p>
+                    </div>
+                `;
+                
+                const status = document.getElementById('connectionStatus');
+                status.textContent = 'Error: ' + message;
+                status.className = 'connection-status error';
+            }
+        }
+
+        // Initialize the application when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new CarDamageAnalyzer();
+        });
+    </script>
+</body>
+</html>

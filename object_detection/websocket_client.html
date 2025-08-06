@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified YOLO + Gemma3n WebSocket Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .upload-section {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        .upload-section.dragover {
+            border-color: #007bff;
+            background-color: #f0f8ff;
+        }
+        .file-input {
+            margin: 20px 0;
+        }
+        .analyze-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+        .analyze-btn:hover:not(:disabled) {
+            background: #0056b3;
+        }
+        .analyze-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: #e9ecef;
+        }
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .results-section {
+            margin-top: 30px;
+        }
+        .result-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #fafafa;
+        }
+        .result-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .detection-item {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #007bff;
+            border-radius: 3px;
+        }
+        .image-display {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Unified YOLO + Gemma3n Analysis</h1>
+            <p>Upload an image to detect car damage and get detailed analysis</p>
+        </div>
+
+        <div class="status" id="connectionStatus">
+            ⏳ Connecting to WebSocket server...
+        </div>
+
+        <div class="upload-section" id="uploadSection">
+            <h3>📸 Upload Car Image</h3>
+            <p>Drag and drop an image here, or click to select</p>
+            <input type="file" id="imageInput" class="file-input" accept="image/*">
+            <br>
+            <button id="analyzeBtn" class="analyze-btn" disabled>🔍 Analyze Image</button>
+        </div>
+
+        <div id="imagePreview" style="text-align: center; margin: 20px 0;"></div>
+
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="two-column">
+                <div class="result-card">
+                    <h3>🎯 YOLO Detection Results</h3>
+                    <div id="yoloResults"></div>
+                </div>
+                <div class="result-card">
+                    <h3>🤖 Gemma3n Analysis</h3>
+                    <div id="gemmaResults"></div>
+                </div>
+            </div>
+            <div class="result-card">
+                <h3>📊 Processed Image</h3>
+                <div id="processedImage"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class UnifiedClient {
+            constructor() {
+                this.ws = null;
+                this.currentImage = null;
+                this.requestId = null;
+                this.init();
+            }
+
+            init() {
+                this.connectWebSocket();
+                this.setupEventListeners();
+            }
+
+            connectWebSocket() {
+                const status = document.getElementById('connectionStatus');
+                
+                try {
+                    this.ws = new WebSocket('ws://localhost:8765');
+                    
+                    this.ws.onopen = () => {
+                        status.textContent = '✅ Connected to server';
+                        status.className = 'status connected';
+                        this.updateAnalyzeButton();
+                    };
+
+                    this.ws.onmessage = (event) => {
+                        this.handleMessage(JSON.parse(event.data));
+                    };
+
+                    this.ws.onclose = () => {
+                        status.textContent = '❌ Disconnected from server';
+                        status.className = 'status error';
+                        this.updateAnalyzeButton();
+                        // Try to reconnect after 3 seconds
+                        setTimeout(() => this.connectWebSocket(), 3000);
+                    };
+
+                    this.ws.onerror = (error) => {
+                        status.textContent = '❌ WebSocket error - Make sure server is running on port 8765';
+                        status.className = 'status error';
+                    };
+
+                } catch (error) {
+                    status.textContent = '❌ Failed to connect to WebSocket server';
+                    status.className = 'status error';
+                }
+            }
+
+            setupEventListeners() {
+                const imageInput = document.getElementById('imageInput');
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                const uploadSection = document.getElementById('uploadSection');
+
+                imageInput.addEventListener('change', (e) => {
+                    if (e.target.files[0]) {
+                        this.loadImage(e.target.files[0]);
+                    }
+                });
+
+                analyzeBtn.addEventListener('click', () => {
+                    if (this.currentImage) {
+                        this.analyzeImage();
+                    }
+                });
+
+                // Drag and drop
+                uploadSection.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadSection.classList.add('dragover');
+                });
+
+                uploadSection.addEventListener('dragleave', () => {
+                    uploadSection.classList.remove('dragover');
+                });
+
+                uploadSection.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadSection.classList.remove('dragover');
+                    if (e.dataTransfer.files[0]) {
+                        this.loadImage(e.dataTransfer.files[0]);
+                    }
+                });
+            }
+
+            loadImage(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.currentImage = e.target.result;
+                    
+                    // Show preview
+                    const preview = document.getElementById('imagePreview');
+                    preview.innerHTML = `
+                        <h3>🖼️ Image Preview</h3>
+                        <img src="${this.currentImage}" class="image-display" style="max-height: 300px;">
+                    `;
+                    
+                    this.updateAnalyzeButton();
+                };
+                reader.readAsDataURL(file);
+            }
+
+            updateAnalyzeButton() {
+                const btn = document.getElementById('analyzeBtn');
+                const canAnalyze = this.ws && this.ws.readyState === WebSocket.OPEN && this.currentImage;
+                btn.disabled = !canAnalyze;
+            }
+
+            analyzeImage() {
+                if (!this.currentImage || !this.ws || this.ws.readyState !== WebSocket.OPEN) {
+                    return;
+                }
+
+                this.requestId = 'req_' + Date.now();
+                
+                // Show loading state
+                const status = document.getElementById('connectionStatus');
+                status.textContent = '🔄 Analyzing image...';
+                status.className = 'status processing';
+                
+                document.getElementById('resultsSection').style.display = 'none';
+
+                // Send image for analysis
+                this.ws.send(JSON.stringify({
+                    type: 'analyze_image',
+                    image: this.currentImage,
+                    request_id: this.requestId
+                }));
+            }
+
+            handleMessage(message) {
+                const status = document.getElementById('connectionStatus');
+                
+                switch (message.type) {
+                    case 'connection':
+                        status.textContent = '✅ ' + message.message;
+                        status.className = 'status connected';
+                        break;
+
+                    case 'status':
+                        status.textContent = '🔄 ' + message.message;
+                        status.className = 'status processing';
+                        break;
+
+                    case 'yolo_results':
+                        this.displayYoloResults(message.data);
+                        status.textContent = '🔄 YOLO detection complete! Running Gemma3n analysis...';
+                        status.className = 'status processing';
+                        break;
+
+                    case 'complete_analysis':
+                        this.displayCompleteResults(message.data);
+                        status.textContent = '✅ Complete analysis finished!';
+                        status.className = 'status connected';
+                        break;
+
+                    case 'gemma_analysis_failed':
+                        status.textContent = '⚠️ ' + message.message;
+                        status.className = 'status error';
+                        // Display error message in Gemma results section
+                        document.getElementById('gemmaResults').innerHTML = `
+                            <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px;">
+                                ❌ ${message.message}
+                            </div>
+                        `;
+                        break;
+
+                    case 'yolo_only_results':
+                        this.displayYoloOnlyResults(message.data);
+                        status.textContent = '⚠️ ' + message.message;
+                        status.className = 'status error';
+                        break;
+
+                    case 'no_detections':
+                        this.displayNoDetections(message.data);
+                        status.textContent = '✅ Analysis complete - No damage detected';
+                        status.className = 'status connected';
+                        break;
+
+                    case 'error':
+                        status.textContent = '❌ Error: ' + message.message;
+                        status.className = 'status error';
+                        break;
+                }
+            }
+
+            displayYoloResults(data) {
+                document.getElementById('resultsSection').style.display = 'block';
+                
+                const yoloDiv = document.getElementById('yoloResults');
+                let html = `<p><strong>Detections Found:</strong> ${data.detection_count}</p>`;
+                
+                if (data.detection_count > 0) {
+                    html += '<div>';
+                    data.detections.forEach((det, index) => {
+                        html += `
+                            <div class="detection-item">
+                                <strong>${det.class}</strong><br>
+                                Confidence: ${(det.conf * 100).toFixed(1)}%<br>
+                                Area: ${det.area.toFixed(0)} px²<br>
+                                Severity Score: ${det.severity_score.toFixed(0)}
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    
+                    html += `<h4>📝 Formatted Detection Report:</h4>
+                             <pre>${data.formatted_detections}</pre>`;
+                }
+
+                yoloDiv.innerHTML = html;
+
+                // Display processed image
+                if (data.output_image) {
+                    document.getElementById('processedImage').innerHTML = 
+                        `<img src="data:image/jpeg;base64,${data.output_image}" class="image-display">`;
+                }
+            }
+
+            displayCompleteResults(data) {
+                this.displayYoloResults(data.yolo_results);
+                
+                const gemmaDiv = document.getElementById('gemmaResults');
+                gemmaDiv.innerHTML = `
+                    <h4>🤖 AI Analysis Report:</h4>
+                    <pre style="background: #f0f8ff; border-left: 4px solid #007bff;">${data.gemma_analysis}</pre>
+                `;
+            }
+
+            displayYoloOnlyResults(data) {
+                this.displayYoloResults(data);
+                
+                const gemmaDiv = document.getElementById('gemmaResults');
+                gemmaDiv.innerHTML = `
+                    <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px;">
+                        ⚠️ Gemma3n analysis could not be completed. Make sure the Gemma3n API is running on port 6000.
+                    </div>
+                `;
+            }
+
+            displayNoDetections(data) {
+                document.getElementById('resultsSection').style.display = 'block';
+                
+                document.getElementById('yoloResults').innerHTML = `
+                    <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px;">
+                        ✅ No car damage detected in the image!
+                    </div>
+                `;
+
+                document.getElementById('gemmaResults').innerHTML = `
+                    <div style="background: #e2e3e5; color: #383d41; padding: 15px; border-radius: 5px;">
+                        🤖 No analysis needed - No damage detected
+                    </div>
+                `;
+
+                if (data.output_image) {
+                    document.getElementById('processedImage').innerHTML = 
+                        `<img src="data:image/jpeg;base64,${data.output_image}" class="image-display">`;
+                }
+            }
+        }
+
+        // Initialize the client when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new UnifiedClient();
+        });
+    </script>
+</body>
+</html>

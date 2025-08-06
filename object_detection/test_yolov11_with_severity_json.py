@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 
 # Load trained model
-model = YOLO("/Users/george/Documents/github/final_gemma/gemma3n-car-damage-competition/object_detection/yolov11/train6/weights/best.pt")
+model = YOLO("yolov11/train6/weights/best.pt")
 
 # Class names and weights for severity
 CLASS_NAMES = [

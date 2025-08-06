@@ -1,8 +1,8 @@
 # gemma3n-car-damage-competition
 
 Dataset:
-- Website - (Link)[https://cardd-ustc.github.io/]
-- Paper - (Link)[https://cardd-ustc.github.io/docs/CarDD.pdf]
+- Website - [Link](https://cardd-ustc.github.io/)
+- Paper - [Link](https://cardd-ustc.github.io/docs/CarDD.pdf)
 - Dataset - [Link](https://drive.google.com/file/d/1bbyqVCKZX5Ur5Zg-uKj0jD0maWAVeOLx/view)
 - Our Annotated Dataset - [Link](https://huggingface.co/datasets/gigwegbe/damaged-car-dataset-annotated)
 
@@ -44,7 +44,7 @@ Model:
 - Add paper - Done 
 - Add Design - GoodNote - Done 
 - Add Wandb 
-  - Link[https://wandb.ai/gigwegbe-carnegie-mellon-university/my-vision-finetune?nw=nwusergigwegbe] - Done
+  - [Link](https://wandb.ai/gigwegbe-carnegie-mellon-university/my-vision-finetune?nw=nwusergigwegbe) - Done
   - Images - Done 
 - Read Huggingface readme 
   
@@ -52,5 +52,4 @@ Model:
 
   # References
   - 
-  - Running Ollama 2 on NVIDIA Jetson Nano with GPU using Docker [https://collabnix.com/running-ollama-2-on-nvidia-jetson-nano-with-gpu-using-docker/]
-  - 
+  - [Running Ollama 2 on NVIDIA Jetson Nano with GPU using Docker](https://collabnix.com/running-ollama-2-on-nvidia-jetson-nano-with-gpu-using-docker/)

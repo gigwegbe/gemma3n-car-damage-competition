@@ -1,0 +1,1 @@
+bash <(curl -sSL https://g.bodaay.io/hfd) -m gigwegbe/gemma3n-merged

@@ -1,5 +1,13 @@
 # gemma3n-car-damage-competition
 
+Dataset:
+- Website - (Link)[https://cardd-ustc.github.io/]
+- Paper - (Link)[https://cardd-ustc.github.io/docs/CarDD.pdf]
+- Dataset - [Link](https://drive.google.com/file/d/1bbyqVCKZX5Ur5Zg-uKj0jD0maWAVeOLx/view)
+- Our Annotated Dataset - [Link](https://huggingface.co/datasets/gigwegbe/damaged-car-dataset-annotated)
+- GGUF Models - [Link](https://huggingface.co/gigwegbe/gemma3n-gguf)
+
+
 ## Flow - Initial Trial 
 - Train 
 - Push the merge model to hub (Optional)
@@ -28,9 +36,11 @@
 - Upload Video 
 - Remove all token or make them invalid 
 - Add Notebook to Kaggle
-- Add paper 
-- Add Design - GoodNote 
+- Add paper - Done 
+- Add Design - GoodNote - Done 
   
 
 
   # References
+  - 
+  - Running Ollama 2 on NVIDIA Jetson Nano with GPU using Docker [https://collabnix.com/running-ollama-2-on-nvidia-jetson-nano-with-gpu-using-docker/]

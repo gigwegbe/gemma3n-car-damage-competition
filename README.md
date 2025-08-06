@@ -61,7 +61,7 @@ Start the WebSocket Server and Frontend
   - training 
   - inference 
   - deployment
-  - notebooks
+  - notebooks - Done 
   - ollama deployment 
   - local huggingface deployment
       - review the `max_new_tokens` currently 40 change to smt - Done 

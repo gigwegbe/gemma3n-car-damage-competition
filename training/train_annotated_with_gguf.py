@@ -76,7 +76,7 @@ def convert_to_conversation(sample):
             "role": "user",
             "content": [
                 {"type": "text", "text": instruction},
-                {"type": "image", "image": sample["image"]},
+                {"type": "image", "image": sample["annotated_image"]},
             ],
         },
         {

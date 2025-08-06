@@ -43,10 +43,10 @@ Start the WebSocket Server and Frontend
 - Save image locally - Done( Kindly review)
   - Test the system with new JSON format
   - Review prompt("Only include entries that are visible in the image.")
-- Inference reference
-- Inference Script 
-- Add frontend material 
-- Add Backend meterial 
+- Inference reference 
+- Inference Script - Done 
+- Add frontend material - Done 
+- Add Backend material - Done 
 - Add Report 
 - Upload Video 
 - Remove all token or make them invalid - Done 
@@ -58,7 +58,7 @@ Start the WebSocket Server and Frontend
   - Images - Done 
 - Update Huggingface readme 
 - Add Readme of the following:
-  - training 
+  - training - 
   - inference 
   - deployment
   - notebooks - Done 

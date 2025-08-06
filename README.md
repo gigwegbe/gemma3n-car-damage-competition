@@ -28,6 +28,15 @@ Model:
 - Deploy 
 
 
+### How to Run the Application
+Start the AutoVision Inspector VLM
+- Launch VLM Deployment - [Link](https://github.com/gigwegbe/gemma3n-car-damage-competition/tree/main/hugginface_deployment)
+
+Start the WebSocket Server and Frontend
+- Start WebSocket & Serve Frontend - [Link](https://github.com/gigwegbe/gemma3n-car-damage-competition/tree/main/object_detection)
+
+
+
 ### TODO 
 - Add wandb log - Done 
 - While merging, monitor GPU memory usage with (watch -n 1 nvidia-smi) - Done 

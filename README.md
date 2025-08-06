@@ -53,3 +53,4 @@ Model:
   # References
   - 
   - Running Ollama 2 on NVIDIA Jetson Nano with GPU using Docker [https://collabnix.com/running-ollama-2-on-nvidia-jetson-nano-with-gpu-using-docker/]
+  - 

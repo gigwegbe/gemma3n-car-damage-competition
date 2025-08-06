@@ -1,5 +1,4 @@
-Experiments with Gemma3n Vision Model using Unsloth for Adapter Fine-Tuning
-This directory contains our experiments involving the Gemma3n vision model, fine-tuned using Unsloth.
+This directory contains our experiments with the Gemma3n vision-based model, featuring a fine-tuned adapter integrated with results from the YOLOv11 object detection model.
 
 
 Base Model: 

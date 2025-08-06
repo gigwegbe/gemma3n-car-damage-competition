@@ -8,12 +8,14 @@ Run the script:
 ```
 
 Training on Annotated Data `train_annotated.py`:
+
 Run the script: 
 ```
     python3 train_annotated.py
 ```
 
 Training with GGUF Conversion `train_annotated_with_gguf.py`: 
+
 Run the script: 
 ```
     train_annotated_with_gguf.py

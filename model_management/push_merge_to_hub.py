@@ -1,6 +1,6 @@
 from huggingface_hub import HfApi, upload_folder
 
-hf_token = "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"  # Your Hugging Face token
+hf_token = "hf_LOLOL"  # Your Hugging Face token
 repo_id = "gigwegbe/gemma3n-merged"  # Replace with your desired repo
 
 # Step 1: Create the repo if it doesn't exist

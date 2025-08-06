@@ -29,7 +29,7 @@ model.push_to_hub_merged(
     repo_id = "gigwegbe/gemma-3n-E2B-it-finetuned-4bit",
     tokenizer = processor.tokenizer,
     save_method = "merged_4bit_forced",
-    token = "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",  # Replace with your token securely
+    token = "hf_LOLOL",  # Replace with your token securely
 )
 
 print("✅ Merged model saved and pushed successfully.")

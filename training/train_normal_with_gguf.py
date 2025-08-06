@@ -173,7 +173,7 @@ model.save_pretrained_gguf(
 
 # # To export and save to your Hugging Face account
 # if True: 
-#     model.push_to_hub_merged("gigwegbe/unsloth_finetune", processor, save_method = "merged_16bit", token = "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")
+#     model.push_to_hub_merged("gigwegbe/unsloth_finetune", processor, save_method = "merged_16bit", token = "hf_LOLOL")
 # print("---------Done Pushing Finetune Model--------")
 
 

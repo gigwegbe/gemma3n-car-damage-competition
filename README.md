@@ -49,7 +49,7 @@ Start the WebSocket Server and Frontend
 - Add Backend meterial 
 - Add Report 
 - Upload Video 
-- Remove all token or make them invalid 
+- Remove all token or make them invalid - Done 
 - Add Notebook to Kaggle
 - Add paper - Done 
 - Add Design - GoodNote - Done 

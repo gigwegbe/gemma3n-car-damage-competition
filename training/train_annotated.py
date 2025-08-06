@@ -137,7 +137,7 @@ tokenizer.save_pretrained("gemma-3N-lora-checkpoint")
 model.push_to_hub(
     "gigwegbe/gemma-3n-E2B-it-finetuned-adapters",
     tokenizer=tokenizer,
-    token="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"
+    token="hf_LOLOL"
 )
 
 print("saving pretrained model")
@@ -153,5 +153,5 @@ model.push_to_hub_merged(
     "gigwegbe/gemma-3n-E2B-it-finetuned-4bit",
     tokenizer = tokenizer,
     save_method = "merged_4bit_forced",
-    token ="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"
+    token ="hf_LOLOL"
 )

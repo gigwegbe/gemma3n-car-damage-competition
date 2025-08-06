@@ -10,6 +10,7 @@ Model:
 - Finetune Adapter - [Link](https://huggingface.co/gigwegbe/gemma-3n-E2B-it-finetuned-adapters)
 - Merge Model(Based Model and Finetunned Adapter) - [Link](https://huggingface.co/gigwegbe/gemma3n-merged)
 - GGUF Models - [Link](https://huggingface.co/gigwegbe/gemma3n-gguf)
+- Training Logs (wandb) - [Link](https://wandb.ai/gigwegbe-carnegie-mellon-university/my-vision-finetune?nw=nwusergigwegbe)
   
 
 
@@ -44,9 +45,10 @@ Model:
 - Add paper - Done 
 - Add Design - GoodNote - Done 
 - Add Wandb 
-  - [Link](https://wandb.ai/gigwegbe-carnegie-mellon-university/my-vision-finetune?nw=nwusergigwegbe) - Done
+  - Link - Done
   - Images - Done 
-- Read Huggingface readme 
+- Update Huggingface readme 
+- Review all links are working 
   
 
 

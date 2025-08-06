@@ -5,7 +5,12 @@ Dataset:
 - Paper - (Link)[https://cardd-ustc.github.io/docs/CarDD.pdf]
 - Dataset - [Link](https://drive.google.com/file/d/1bbyqVCKZX5Ur5Zg-uKj0jD0maWAVeOLx/view)
 - Our Annotated Dataset - [Link](https://huggingface.co/datasets/gigwegbe/damaged-car-dataset-annotated)
+
+Model: 
+- Finetune Adapter - [Link](https://huggingface.co/gigwegbe/gemma-3n-E2B-it-finetuned-adapters)
+- Merge Model(Based Model and Finetunned Adapter) - [Link](https://huggingface.co/gigwegbe/gemma3n-merged)
 - GGUF Models - [Link](https://huggingface.co/gigwegbe/gemma3n-gguf)
+  
 
 
 ## Flow - Initial Trial 
@@ -41,6 +46,7 @@ Dataset:
 - Add Wandb 
   - Link[https://wandb.ai/gigwegbe-carnegie-mellon-university/my-vision-finetune?nw=nwusergigwegbe] - Done
   - Images - Done 
+- Read Huggingface readme 
   
 
 

@@ -38,6 +38,9 @@ Dataset:
 - Add Notebook to Kaggle
 - Add paper - Done 
 - Add Design - GoodNote - Done 
+- Add Wandb 
+  - Link[https://wandb.ai/gigwegbe-carnegie-mellon-university/my-vision-finetune?nw=nwusergigwegbe] - Done
+  - Images - Done 
   
 
 

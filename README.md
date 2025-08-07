@@ -34,7 +34,7 @@ Start the AutoVision Inspector VLM
 Start the WebSocket Server and Frontend
 - Start WebSocket & Serve Frontend - [Link](https://github.com/gigwegbe/gemma3n-car-damage-competition/tree/main/object_detection)
 
-  # References
+## References
 - [Running Ollama 2 on NVIDIA Jetson Nano with GPU using Docker](https://collabnix.com/running-ollama-2-on-nvidia-jetson-nano-with-gpu-using-docker/)
 -  [Failed at model.save_pretrained_gguf](https://github.com/unslothai/unsloth/issues/341#issuecomment-2340006070)
 -  [Docker Setup for Unsloth](https://github.com/unslothai/unsloth/wiki#1-dockerfile)

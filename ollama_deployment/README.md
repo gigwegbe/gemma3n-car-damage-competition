@@ -2,8 +2,8 @@ There are different way to deploy to Ollama:
 We tried 2 methods: 
 
 - Using SafeTensor model from Huggingface
-- Pulling Model from Hugging
-- Using GGUF model  converted using Llamacpp, check this for more details[](): 
+- Pulling Model from Huggingface
+- Using GGUF model  converted using Llamacpp: 
     To building llamacpp: 
     ```
     ./build_gguf_llamacpp.sh
@@ -38,3 +38,8 @@ Deployment on different device:
 
 - Jetson Nano 4GB
    ![](../assets/ollama-jetson4gb.png)
+
+### References
+-  [Adding Models to Ollama](https://debuggercafe.com/adding-models-to-ollama/)
+-  [Importing a model from Safetensors weights into Ollama](https://debuggercafe.com/adding-models-to-ollama/)
+-  [Importing a GGUF based model or adapter](https://github.com/ollama/ollama/blob/main/docs/import.md#importing-a-gguf-based-model-or-adapter)

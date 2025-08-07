@@ -3,6 +3,9 @@ Demo: [Video 1](https://www.youtube.com/watch?v=2nr59kP-Ano) [Video 2](https://w
 
 ![Autovision](./assets/webapp-results/m4.png)
 
+## Consumer Grade Device with Ollama 
+![Ollama Device](./assets/ollama-screenshot-mac.png)
+
 Dataset:
 - Website - [Link](https://cardd-ustc.github.io/)
 - Paper - [Link](https://cardd-ustc.github.io/docs/CarDD.pdf)
@@ -28,8 +31,7 @@ Model:
 ### Edge Devices - Jetson TX2 and Jetson Nano 
 ![Edge Devices](./assets/jetson-devices.png)
 
-### Consumer Grade Device with Ollama 
-![Ollama Device](./assets/ollama-screenshot-mac.png)
+
 
 ## How to run the Application
 Start the AutoVision Inspector VLM

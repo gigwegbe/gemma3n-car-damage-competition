@@ -23,7 +23,8 @@ Quantization of Models:
 We converted the model to various formats to support  various low powered devices: 
 <Add Image>
 
-Link to the  Models(GGUF) repository - Link 
+Link to the  Models(GGUF) repository - [Link](https://huggingface.co/gigwegbe/gemma3n-merged)
+   ![](../assets/successful-convert-gguf.png)
 
 Deployment on different device: 
 

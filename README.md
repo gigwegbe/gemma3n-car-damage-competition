@@ -25,6 +25,9 @@ Model:
 ## Deployment Summary
 ![](./assets/device-summary.png)
 
+### Edge Devices - Jetson TX2 and Jetson Nano 
+![Edge Devices](./assets/jetson-devices.png)
+
 
 ## How to run the Application
 Start the AutoVision Inspector VLM

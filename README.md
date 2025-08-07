@@ -62,7 +62,7 @@ Start the WebSocket Server and Frontend
   - inference - Done 
   - deployment - Done 
   - notebooks - Done 
-  - Ollama deployment - ?
+  - Ollama deployment - Done 
   - Inference reference - ?
   - local huggingface deployment
       - review the `max_new_tokens` currently 40 change to smt - Done 

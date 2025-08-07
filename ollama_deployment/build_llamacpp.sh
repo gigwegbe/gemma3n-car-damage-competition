@@ -8,5 +8,3 @@ cmake --build llama.cpp/build --config Release --clean-first --target llama-quan
 cp llama.cpp/build/bin/llama-* llama.cpp
 
 # python llama.cpp/convert_hf_to_gguf.py FOLDER --outfile OUTPUT --outtype f16
-# python llama.cpp/convert_hf_to_gguf.py gemma-use/ --outfile gguf --outtype f16
-# python llama.cpp/convert_hf_to_gguf.py gemma-use/ --outfile gguf --outtype f16 --mmproj . 

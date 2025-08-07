@@ -1,0 +1,1 @@
+The codebase contains scripts for downloading and uploading models to huggingface. 

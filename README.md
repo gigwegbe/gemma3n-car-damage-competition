@@ -13,8 +13,6 @@ Model:
 - GGUF Models - [Link](https://huggingface.co/gigwegbe/gemma3n-gguf)
 - Training Logs (wandb) - [Link](https://wandb.ai/gigwegbe-carnegie-mellon-university/my-vision-finetune?nw=nwusergigwegbe)
   
-
-
 ## Process Flow 
 - Train using Damaged Car Dataset  
 - Push the merge model to hub 
@@ -35,45 +33,6 @@ Start the AutoVision Inspector VLM
 
 Start the WebSocket Server and Frontend
 - Start WebSocket & Serve Frontend - [Link](https://github.com/gigwegbe/gemma3n-car-damage-competition/tree/main/object_detection)
-
-
-
-## TODO 
-- Add wandb log - Done 
-- While merging, monitor GPU memory usage with (watch -n 1 nvidia-smi) - Done 
-- Save image locally - Done( Kindly review)
-  - Test the system with new JSON format - Done 
-  - Review prompt("Only include entries that are visible in the image.") - Done 
-- Inference Script - Done 
-- Add frontend material - Done 
-- Add Backend material - Done 
-- Add Report - Done 
-- Upload Video - Done 
-- Remove all token or make them invalid - Done 
-- Add Notebook to Kaggle
-- Add paper - Done 
-- Add Design - GoodNote - Done 
-- Add Wandb 
-  - Link - Done
-  - Images - Done 
-- Update Huggingface readme 
-- Add Readme of the following:
-  - training - Done 
-  - inference - Done 
-  - deployment - Done 
-  - notebooks - Done 
-  - Ollama deployment - Done 
-  - Inference reference - ?
-  - local huggingface deployment
-      - review the `max_new_tokens` currently 40 change to smt - Done 
-      - review the attention head ? 8 - Done 
-      - Macbook M4 - Done 
-      - RTX 3090 - Done 
-      - Add requirements for deployment - Done 
-
-- Review all links are working 
-  
-
 
   # References
 - [Running Ollama 2 on NVIDIA Jetson Nano with GPU using Docker](https://collabnix.com/running-ollama-2-on-nvidia-jetson-nano-with-gpu-using-docker/)

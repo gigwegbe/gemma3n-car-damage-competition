@@ -33,8 +33,9 @@ Model:
 ![](./assets/process_flow.png)
 We built the frontend using plain HTML, JavaScript, and CSS, enabling users to upload an image and interact with the backend systems.
 - 1: The uploaded image is first sent to the Object Detection Backend (Python), which processes the image and generates annotations (e.g., bounding boxes, detected parts).
-- 2: These annotated results are then passed to the VLM (Gemma3n) Backend, which performs deeper visual-language analysis.
-- 3: The final analysis output from the VLM is returned to the frontend for display.
+- 2: The prediction is returned to the frontend and simultaneously forwarded to the VLM for further analysis.
+- 3: These annotated results(annotated image and bounding boxes data) are then passed to the VLM (Gemma3n) Backend, which performs deeper visual-language analysis.
+- 4: The final analysis output from the VLM is returned to the frontend for display.
   
 This modular flow allows for clear separation between object detection and vision-language reasoning, while keeping the frontend lightweight and efficient.
 

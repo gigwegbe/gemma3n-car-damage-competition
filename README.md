@@ -35,7 +35,7 @@ We built the frontend using plain HTML, JavaScript, and CSS, enabling users to u
 - 1: The uploaded image is first sent to the Object Detection Backend (Python), which processes the image and generates annotations (e.g., bounding boxes, detected parts).
 - 2: The prediction is returned to the frontend and simultaneously forwarded to the VLM for further analysis.
 - 3: These annotated results(annotated image and bounding boxes data) are then passed to the VLM (Gemma3n) Backend, which performs deeper visual-language analysis.
-- 4: The final analysis output from the VLM is returned to the frontend for display.
+- 4: The final analysis output(`general_description`, `damage_type`, `qualitative_description_of_size_of_damage`, `technical_description_location_of_damage`, `recommendation_for_fix`, and `estimated_time_of_repair`) from the VLM is returned to the frontend for display.
   
 This modular flow allows for clear separation between object detection and vision-language reasoning, while keeping the frontend lightweight and efficient.
 

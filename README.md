@@ -28,6 +28,8 @@ Model:
 ### Edge Devices - Jetson TX2 and Jetson Nano 
 ![Edge Devices](./assets/jetson-devices.png)
 
+### Consumer Grade Device with Ollama 
+![Ollama Device](./assets/ollama-screenshot-mac.png)
 
 ## How to run the Application
 Start the AutoVision Inspector VLM

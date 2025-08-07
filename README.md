@@ -1,5 +1,6 @@
 # AutoVisionInspector - Gemma3n Impact Challenge
 Demo: [Video 1](https://www.youtube.com/watch?v=2nr59kP-Ano) [Video 2](https://www.youtube.com/watch?v=lZjY6w1PU30)
+Slide: [Link](https://github.com/gigwegbe/gemma3n-car-damage-competition/blob/main/assets/AutoVisionInspector.pdf)
 
 ### With Vision Capabilities
 ![Autovision](./assets/webapp-results/m4.png)

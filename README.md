@@ -1,5 +1,5 @@
 # AutoVision Inspector
-![](./assets/webapp-results/m4.png)
+![Autovision](./assets/webapp-results/m4.png)
 
 Dataset:
 - Website - [Link](https://cardd-ustc.github.io/)
@@ -15,18 +15,15 @@ Model:
   
 
 
-## Flow - Initial Trial 
-- Train 
-- Push the merge model to hub (Optional)
+## Process Flow 
+- Train using Damaged Car Dataset  
+- Push the merge model to hub 
 - Convert the merged model to gguf (Might have to create a swap memory)
-- Convert to different format()
-- Run on Ollama 
+- Convert to different format(bf16,f16,q2_k,q4_k_m,q8 etc.)
+- Run on Ollama, Huggingface Engine and UnSloth FastVisionModel Engine
 
-
-## Flow - Initial Trial 
-- Train 
-- Push the merge model to hub (Optional)
-- Deploy 
+## Deployment Summary
+![](./assets/device-summary.png)
 
 
 ## How to Run the Application

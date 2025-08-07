@@ -24,7 +24,7 @@ We converted the model to various formats to support  various low powered device
 <Add Image>
 
 Link to the  Models(GGUF) repository - [Link](https://huggingface.co/gigwegbe/gemma3n-merged)
-   ![](../assets/successful-convert-gguf.png)
+   ![](../assets/gguf-formats.png)
 
 Deployment on different device: 
 

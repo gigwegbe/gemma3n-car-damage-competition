@@ -26,7 +26,7 @@ Model:
 ![](./assets/device-summary.png)
 
 
-## How to Run the Application
+## How to run the Application
 Start the AutoVision Inspector VLM
 - Launch VLM Deployment - [Link](https://github.com/gigwegbe/gemma3n-car-damage-competition/tree/main/hugginface_deployment)
 
@@ -35,7 +35,7 @@ Start the WebSocket Server and Frontend
 
 
 
-### TODO 
+## TODO 
 - Add wandb log - Done 
 - While merging, monitor GPU memory usage with (watch -n 1 nvidia-smi) - Done 
 - Save image locally - Done( Kindly review)
@@ -44,8 +44,8 @@ Start the WebSocket Server and Frontend
 - Inference Script - Done 
 - Add frontend material - Done 
 - Add Backend material - Done 
-- Add Report 
-- Upload Video 
+- Add Report - Done 
+- Upload Video - Done 
 - Remove all token or make them invalid - Done 
 - Add Notebook to Kaggle
 - Add paper - Done 
@@ -73,5 +73,11 @@ Start the WebSocket Server and Frontend
 
 
   # References
-  - 
   - [Running Ollama 2 on NVIDIA Jetson Nano with GPU using Docker](https://collabnix.com/running-ollama-2-on-nvidia-jetson-nano-with-gpu-using-docker/)
+-  [Failed at model.save_pretrained_gguf](https://github.com/unslothai/unsloth/issues/341#issuecomment-2340006070)
+-  [Docker Setup for Unsloth](https://github.com/unslothai/unsloth/wiki#1-dockerfile)
+-  [Fine Tune StarCoder2-3B](https://debuggercafe.com/fine-tune-starcoder2-3b/)
+-  [Adding Models to Ollama](https://debuggercafe.com/adding-models-to-ollama/)
+-  [Importing a model from Safetensors weights into Ollama](https://debuggercafe.com/adding-models-to-ollama/)
+-  [Importing a GGUF based model or adapter](https://github.com/ollama/ollama/blob/main/docs/import.md#importing-a-gguf-based-model-or-adapter)
+-  [Quantizing a Model](https://github.com/ollama/ollama/blob/main/docs/import.md#quantizing-a-model)

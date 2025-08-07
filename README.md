@@ -1,4 +1,4 @@
-# AutoVision Inspector
+# AutoVisionInspector - Gemma3n Impact Challenge
 ![Autovision](./assets/webapp-results/m4.png)
 
 Dataset:

@@ -28,12 +28,12 @@ Link to the  Models(GGUF) repository - Link
 Deployment on different device: 
 
 - Macbook M4: 
-   <Add Image>
+    ![](../assets/ollama-screenshot-mac.png)
 
 
 - Jetson TX2 
-    <Add Image>
+   ![](../assets/ollama-screenshot-tx2.png)
 
 
 - Jetson Nano 4GB
-    <Add Image>
+   ![](../assets/ollama-jetson4gb.png)

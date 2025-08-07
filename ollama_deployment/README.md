@@ -15,8 +15,7 @@ We tried 2 methods:
 
     To build the gguf model with the vision projection adapter
     ```
-
-python llama.cpp/convert_hf_to_gguf.py gemma-use/ --outfile gguf --outtype f16 --mmproj . 
+    python llama.cpp/convert_hf_to_gguf.py gemma-use/ --outfile gguf --outtype f16 --mmproj . 
     ```
 
 

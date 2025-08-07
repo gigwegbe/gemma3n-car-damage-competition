@@ -1,4 +1,6 @@
 # AutoVisionInspector - Gemma3n Impact Challenge
+Demo: [Video 1](https://www.youtube.com/watch?v=2nr59kP-Ano) [Video 2](https://www.youtube.com/watch?v=lZjY6w1PU30)
+
 ![Autovision](./assets/webapp-results/m4.png)
 
 Dataset:

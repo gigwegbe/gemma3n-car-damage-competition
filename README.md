@@ -1,9 +1,10 @@
 # AutoVisionInspector - Gemma3n Impact Challenge
 Demo: [Video 1](https://www.youtube.com/watch?v=2nr59kP-Ano) [Video 2](https://www.youtube.com/watch?v=lZjY6w1PU30)
 
+### With Vision Capabilities
 ![Autovision](./assets/webapp-results/m4.png)
 
-## Consumer Grade Device with Ollama 
+### Using Text Capabilities Only With Ollama
 ![Ollama Device](./assets/ollama-screenshot-mac.png)
 
 Dataset:

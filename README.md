@@ -24,9 +24,9 @@ Model:
 
 ## Project Flow 
 - Train using Damaged Car Dataset  
-- Push the merge model to hub 
+- Push the merged model to hub 
 - Convert the merged model to gguf (Might have to create a swap memory)
-- Convert to different format(bf16,f16,q2_k,q4_k_m,q8 etc.)
+- Convert to different formats(bf16,f16,q2_k,q4_k_m,q8 etc.)
 - Run on Ollama, Huggingface Engine and UnSloth FastVisionModel Engine
 
 ## Process Flow 

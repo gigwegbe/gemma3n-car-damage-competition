@@ -41,9 +41,8 @@ Start the WebSocket Server and Frontend
 - Add wandb log - Done 
 - While merging, monitor GPU memory usage with (watch -n 1 nvidia-smi) - Done 
 - Save image locally - Done( Kindly review)
-  - Test the system with new JSON format
-  - Review prompt("Only include entries that are visible in the image.")
-- Inference reference 
+  - Test the system with new JSON format - Done 
+  - Review prompt("Only include entries that are visible in the image.") - Done 
 - Inference Script - Done 
 - Add frontend material - Done 
 - Add Backend material - Done 
@@ -59,10 +58,11 @@ Start the WebSocket Server and Frontend
 - Update Huggingface readme 
 - Add Readme of the following:
   - training - Done 
-  - inference 
-  - deployment
+  - inference - Done 
+  - deployment - Done 
   - notebooks - Done 
-  - ollama deployment 
+  - Ollama deployment - ?
+  - Inference reference - ?
   - local huggingface deployment
       - review the `max_new_tokens` currently 40 change to smt - Done 
       - review the attention head ? 8 - Done 
